@@ -1,0 +1,164 @@
+/*
+ Theme Name:     Everest Theme
+ Theme URI:      http://www.spyderbit.com/ 
+ Description:    Everest Theme    
+ Author:         Bob Martin               
+ Author URI:     http://www.spyderbit.com/ 
+ Template:       attitude
+ Version:        1.0.0             
+*/
+
+@import url("../attitude/style.css");
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+	font-size: 18px;
+}
+
+#site-title a {
+	font-size: 36px;
+}
+
+/* Headings */
+h1 {
+	font-size: 40px;
+	line-height: 46px;
+}
+
+h2 {
+	font-size: 38px;
+	line-height: 45px;
+}
+
+h3{
+	font-size: 36px;
+	line-height: 42px;
+}
+
+h4 {
+	font-size: 34px;
+	line-height: 40px;
+}
+
+h5 {
+	font-size: 32px;
+	line-height: 38px;
+}
+
+h6 {
+	font-size: 29px;
+	line-height: 35px;
+}
+
+pre, code, kbd {
+	font-size: 24px;
+	line-height: 29px
+}
+
+#access a {
+	font-size: 18px;
+	padding: 20px 0 0;	
+	height: 39px;
+}
+
+#access ul li ul li a, 
+#access ul li.current-menu-item ul li a, 
+#access ul li ul li.current-menu-item a,
+#access ul li.current_page_ancestor ul li a, 
+#access ul li.current-menu-ancestor ul li a,
+#access ul li.current_page_item ul li a {
+	line-height: 26px;
+	font-size: 18px;
+}
+
+.slogan-wrap .slogan {
+	font-size: 30px;	
+	line-height: 36px;
+}
+
+.slogan-wrap .view-work {
+	font-size: 23px;	
+	height: 33px;
+}
+
+#content .service-item .service-title {
+	font-size: 25px;
+	line-height: 30px;
+}
+
+.page-title {
+	font-size: 29px;
+	line-height: 35px;
+}
+
+.entry-content th,
+
+.comment-content th {
+	font-size: 15px;
+}
+
+#content .custom-gallery-title, 
+.custom-gallery-title a {
+        font-size: 25px;
+	line-height: 30px;
+}
+
+.image-attachment .entry-caption p {
+	font-size: 15px;
+}
+
+.comments-title {
+	font-size: 35px;
+	line-height: 43px;
+}
+
+.comments-area article header cite {
+	font-size: 20px;
+}
+
+.comments-area article header time {
+	font-size: 18px;
+}
+
+.comments-area article header h4 {
+	font-size: 17px;
+}
+
+.comments-area li.bypostauthor cite span {
+	font-size: 15px;
+}
+
+a.comment-reply-link {
+	font-size: 18px;
+}
+
+#respond h3#reply-title {
+	font-size: 35px;
+	line-height: 43px;
+}
+
+#respond h3#reply-title #cancel-comment-reply-link {
+	font-size: 18px;
+}
+
+#respond form input[type="text"],
+#respond form textarea {
+	font-size: 18px;
+}
+
+#respond form p.form-allowed-tags {
+	font-size: 18px;
+}
+
+.widget-title {
+    font-size: 29px;
+    line-height: 35px;
+}
+
+.widget_calendar #wp-calendar caption {
+	font-size: 16px;
+}
+
+#colophon .widget-title {
+   font-size: 24px;
+   line-height: 29px;
+}
