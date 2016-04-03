@@ -260,7 +260,7 @@ function attitude_socialnetworks( $flag ) {
 	$options = wp_parse_args( get_option( 'attitude_theme_options', array() ), attitude_get_option_defaults());
 
 	$attitude_socialnetworks = '';
-	if ( ( !$attitude_socialnetworks) && ( 1 == $flag ) )  {
+	if ( ( 1 != $flag ) || ( 1 == $flag ) )  {
 		
 		$attitude_socialnetworks .='
 			<div class="social-profiles clearfix">

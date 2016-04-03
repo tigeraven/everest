@@ -1,5 +1,5 @@
 <?php    
-//## NextScripts Facebook Connection Class
+//## NextScripts StumbleUpon Connection Class
 $nxs_snapAvNts[] = array('code'=>'SU', 'lcode'=>'su', 'name'=>'StumbleUpon');
 
 if (!class_exists("nxs_snapClassSU")) { class nxs_snapClassSU {

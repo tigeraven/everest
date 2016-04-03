@@ -481,8 +481,8 @@ class attitude_promobox_widget extends WP_Widget {
 				<label for="<?php echo $this->get_field_id('promotional_img_background');?>">
 						<?php _e('Background Image:', 'attitude');?>
 				</label>
-					<input class="upload1" type="text"  name="<?php echo $this->get_field_name('promotional_img_background'); ?>" value="<?php echo esc_url($promotional_img_background); ?>" />
-					<input class="upload-button1" name="<?php echo $this->get_field_name('promotional_img_background'); ?>" type="button" value="<?php esc_attr_e( 'Upload', 'attitude' ); ?>" />
+					<input class="upload1" type="text" id="<?php echo $this->get_field_id( 'promotional_img_background' ); ?>"  name="<?php echo $this->get_field_name('promotional_img_background'); ?>" value="<?php echo esc_url($promotional_img_background); ?>" />
+					<input class="button custom_media_button" name="<?php echo $this->get_field_name('promotional_img_background'); ?>" id="custom_media_button_services" type="button" value="<?php esc_attr_e( 'Upload', 'attitude' ); ?>" onclick="mediaupload.uploader( '<?php echo $this->get_field_id( 'promotional_img_background' ); ?>' ); return false;" />
 			</p>
 			<p>
 				<label for="<?php echo $this->get_field_id('widget_primary');?>">

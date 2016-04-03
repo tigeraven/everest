@@ -1,4 +1,16 @@
 == Change Log ==
+= 3.0.7 =
+* Fix - Frontpage Category issue fixed
+* Fix - Widgets Upload button issue fixed
+* Update - Russian Language Updated. Thanks to Kirill Belotserkovskiy <k.belotserkovskiy@gmail.com> for updating the translation files
+
+= 3.0.6 =
+* Update - html5 updated to version 3.7.3
+* Fix - Social Profiles not displaying issue fixed in footer
+
+= 3.0.5 =
+* Update - Russian Language Updated. Thanks to Kirill Belotserkovskiy <k.belotserkovskiy@gmail.com> for updating the translation files.
+
 = 3.0.4 =
 * Feature - New Widget Theme Horse: PromoBox added 
 

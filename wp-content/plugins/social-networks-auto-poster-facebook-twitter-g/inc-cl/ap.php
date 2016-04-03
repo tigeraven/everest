@@ -15,8 +15,9 @@ if (!class_exists("nxs_snapClassAP")) { class nxs_snapClassAP { var $ntInfo = ar
        $response = wp_remote_post('https://account.app.net/oauth/access_token', $wprg); 
        if ( (is_object($response) && (isset($response->errors))) || (is_array($response) && stripos($response['body'],'"error":')!==false )) { prr($response); die(); }  
        $params = json_decode($response['body'], true);  $fbo['apAppAuthToken'] = $params['access_token']; if ($params['user_id']>0) { $fbo['appAppUserID'] = $params['user_id']; $fbo['appAppUserName'] = $params['username'];  }
-       if ($params['user_id']>0) { if (function_exists('get_option')) $nxs_gOptions = get_option('NS_SNAutoPoster'); if(!empty($nxs_gOptions)) { 
-         $nxs_gOptions['ap'][$_GET['acc']] = $fbo;  nxs_settings_save($nxs_gOptions); } ?><script type="text/javascript">window.location = "<?php echo $nxs_snapSetPgURL; ?>"</script>      
+       if ($params['user_id']>0) { nxs_save_glbNtwrks($ntInfo['lcode'],$_GET['acc'],$fbo,'*');            
+           //if (function_exists('get_option')) $nxs_gOptions = get_option('NS_SNAutoPoster'); if(!empty($nxs_gOptions)) { $nxs_gOptions['ap'][$_GET['acc']] = $fbo;  nxs_settings_save($nxs_gOptions); }            
+         ?><script type="text/javascript">window.location = "<?php echo $nxs_snapSetPgURL; ?>"</script>      
        <?php } die(); }
     }  
   ?>    

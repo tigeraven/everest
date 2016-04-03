@@ -4,30 +4,32 @@ Plugin Name: NextScripts: Social Networks Auto-Poster
 Plugin URI: http://www.nextscripts.com/social-networks-auto-poster-for-wordpress
 Description: This plugin automatically publishes posts from your blog to multiple accounts on Facebook, Twitter, and Google+ profiles and/or pages.
 Author: Next Scripts
-Version: 3.4.26
+Version: 3.5.3
 Author URI: http://www.nextscripts.com
 Text Domain: nxs_snap
-Copyright 2012-2015  Next Scripts, Inc
+Copyright 2012-2016  Next Scripts, Inc
 */
-define( 'NextScripts_SNAP_Version' , '3.4.26' );
+define( 'NextScripts_SNAP_Version' , '3.5.3' );
 
 $nxs_mLimit = ini_get('memory_limit'); if (strpos($nxs_mLimit, 'G')) {$nxs_mLimit = (int)$nxs_mLimit * 1024;} else {$nxs_mLimit = (int)$nxs_mLimit;}
   if ($nxs_mLimit>0 && $nxs_mLimit<64) { add_filter('plugin_action_links','ns_add_nomem_link', 10, 2 );
 if (!function_exists("ns_add_nomem_link")) { function ns_add_nomem_link($links, $file) { global $nxs_mLimit; static $this_plugin; if (!$this_plugin) $this_plugin = plugin_basename(__FILE__);
   if ($file == $this_plugin){ $settings_link = '<b style="color:red;">Not Enough Memory allowed for PHP.</b> <br/> You have '.$nxs_mLimit.' MB. You need at least 64MB'; array_unshift($links, $settings_link);} return $links;}}
 } else {    
-require_once "nxs_functions.php"; require_once "inc/nxs_functions_adv.php"; require_once "inc/nxs_snap_class.php"; 
+require_once "nxs_functions.php"; require_once "inc/nxs_functions_adv.php"; require_once "inc/nxs_flt_class.php"; require_once "inc/nxs_snap_class.php";  require_once "inc/nxs_ntlist_class.php"; require_once "inc/nxs_oauth_class.php";
 //## Include All Available Networks            
 //error_reporting(E_ALL); ini_set('display_errors', '1');
-global $nxs_snapAvNts, $nxs_snapThisPageUrl, $nxs_snapSetPgURL, $nxs_plurl, $nxs_plpath, $nxs_isWPMU, $nxs_tpWMPU, $nxs_skipSSLCheck;
+global $nxs_snapAvNts, $nxs_snapThisPageUrl, $nxs_snapSetPgURL, $nxs_plurl, $nxs_plpath, $nxs_isWPMU, $nxs_tpWMPU, $nxs_skipSSLCheck; define( 'NXS_PLPATH', plugin_dir_path(__FILE__) );  define( 'NXS_PLURL', plugin_dir_url(__FILE__));  define( 'NXS_SETV', 350); 
 
 $nxs_snapSetPgURL = nxs_get_admin_url().'options-general.php?page=NextScripts_SNAP.php'; $nxs_snapThisPageUrl = $nxs_snapSetPgURL; $nxs_plurl = plugin_dir_url(__FILE__); $nxs_plpath = plugin_dir_path(__FILE__); 
-$nxs_isWPMU = defined('MULTISITE') && MULTISITE==true; 
+$nxs_isWPMU = defined('MULTISITE') && MULTISITE==true;  
 
-if (class_exists("NS_SNAutoPoster")) { nxs_checkAddLogTable(); $plgn_NS_SNAutoPoster = new NS_SNAutoPoster(); }
 do_action('nxs_doSomeMore');
-if (!isset($nxs_snapAvNts) || !is_array($nxs_snapAvNts)) $nxs_snapAvNts = array(); $nxs_snapAPINts = array(); foreach (glob($nxs_plpath.'inc-cl/*.php') as $filename){  require_once $filename; } 
+if (!isset($nxs_snapAvNts) || !is_array($nxs_snapAvNts)) $nxs_snapAvNts = array(); $nxs_snapAPINts = array(); foreach (glob($nxs_plpath.'inc-cl/*.php') as $filename) require_once $filename; 
+if (file_exists(WP_CONTENT_DIR.'/nx-apis/')) foreach (glob(WP_CONTENT_DIR.'/nx-apis/*.php') as $filename) require_once $filename; 
 do_action('nxs_doSomeMoreSecond');
+//## Init Class
+if (class_exists("NS_SNAutoPoster")) { nxs_checkAddLogTable(); $plgn_NS_SNAutoPoster = new NS_SNAutoPoster(); new nxs_Filters;  }
 //## Tests
 if (isset($_GET['page']) && $_GET['page']=='NextScripts_SNAP.php' && isset($_GET['do']) && $_GET['do']=='test'){ 
   error_reporting(E_ALL); ini_set('error_reporting', E_ALL); ini_set('display_errors', 1); if (function_exists('gzdeflate')) echo "Y"; else echo "N";  echo "Testting... cURL<br/>";
@@ -196,7 +198,7 @@ if (!function_exists("nxs_snapPublishTo")) { function nxs_snapPublishTo($postArr
   if ($post->post_type == 'post' || ($options['useForPages']=='1' && $post->post_type == 'page') || (in_array($post->post_type, $nxsCPTSeld))) { 
     if ($isPost && $options['skipSecurity']!='1' && !current_user_can("make_snap_posts") && !current_user_can("manage_options")) { nxs_addToLogN('I', 'Skipped', '', 'Current user can\'t autopost - Post ID:('.$postID.')' ); return; }
     $postUser = $postArr->post_author; 
-    if ($options['skipSecurity']!='1' && !user_can( $postUser, "make_snap_posts" ) && !user_can( $postUser, "manage_options")){ nxs_addToLogN('I', 'Skipped', '', '', 'User ID '.$postUser.' can\'t autopost (see <a target="_blank" href="http://www.nextscripts.com/support-faq/#a17">FAQ #1.7</a>)  - Post ID:('.$postID.')' ); return; } 
+    if ($options['skipSecurity']!='1' && !user_can( $postUser, "make_snap_posts" ) && !user_can( $postUser, "manage_options")){ nxs_addToLogN('I', 'Skipped', '', '', 'User ID '.$postUser.' can\'t autopost (please see <a target="_blank" href="http://www.nextscripts.com/support-faq/#a17">FAQ #1.7</a> for more info/solution)  - Post ID:('.$postID.')' ); return; } 
     if ($isPost) $plgn_NS_SNAutoPoster->NS_SNAP_SavePostMetaTags($postID); 
     if (function_exists('nxs_doSMAS2')) { nxs_doSMAS2($postArr, $type, $aj); return; } else {
     $options = $plgn_NS_SNAutoPoster->nxs_options;  $ltype=strtolower($type);
@@ -244,7 +246,7 @@ if (!function_exists("nxs_snapPublishTo")) { function nxs_snapPublishTo($postArr
         } else { nxs_addToLogN('GR', 'Skipped', $avNt['name'].' ('.$optMt['nName'].')', '-=[Unchecked Account]=- - PostID:'.$postID.'' ); }
       }                   
     } } } else { nxs_addToLogN('I', 'Skipped', '', 'Excluded Post Type: '.$post->post_type.' (Post ID: '.$postID.')| NOT IN ('.print_r($nxsCPTSeld, true).')| ALL ('.print_r($post_types, true).')' ); return; }
-   if ($isS) restore_current_blog(); 
+   global $isS; if ($isS && function_exists("restore_current_blog")) restore_current_blog(); 
 }} 
 
 //## Add settings link to plugins list
@@ -300,7 +302,7 @@ function nxs_ogtgCallback($content){ global $post, $plgn_NS_SNAutoPoster;
     $prcRes = preg_match( '/<meta name="description" content="(.*)"/', $content, $description_matches );    
     if ( $prcRes !== false && count( $description_matches ) == 2 ) $ogD = '<meta property="og:description" content="' . $description_matches[1] . '" />'."\r\n"; {
       if (!empty($post) && is_object($post) && is_singular()) {
-        if(has_excerpt($post->ID))$ogD=strip_tags(nxs_snapCleanHTML(get_the_excerpt($post->ID)));else $ogD= str_replace("  ", ' ', str_replace("\r\n", ' ', trim(substr(strip_tags(nxs_snapCleanHTML(strip_shortcodes($post->post_content))), 0, 200))));
+        if(has_excerpt($post->ID))$ogD=strip_tags(nxs_snapCleanHTML($post->post_excerpt));else $ogD= str_replace("  ", ' ', str_replace("\r\n", ' ', trim(substr(strip_tags(nxs_snapCleanHTML(strip_shortcodes($post->post_content))), 0, 200))));        
       } else $ogD = get_bloginfo('description');  $ogD = preg_replace('/\r\n|\r|\n/m','',$ogD); 
       $ogD = '<meta property="og:description" content="'.esc_attr( apply_filters( 'nxsog_desc', $ogD ) ).'" />'."\r\n";          
     }    
@@ -335,9 +337,24 @@ function nxs_ogtgCallback($content){ global $post, $plgn_NS_SNAutoPoster;
 }
 function nxs_addOGTagsPreHolder() { echo "<!-- ## NXS/OG ## --><!-- ## NXSOGTAGS ## --><!-- ## NXS/OG ## -->\n\r";}
 
-if (!function_exists("nxssnap_enqueue_scripts")) { function nxssnap_enqueue_scripts(){ 
-  wp_enqueue_script( 'nxssnap-scripts', plugin_dir_url( __FILE__ ) . 'js/js.js', array( 'jquery' ),  NextScripts_SNAP_Version);
-  wp_localize_script( 'nxssnap-scripts', 'MyAjax', array( 'ajaxurl' => nxs_get_admin_url( 'admin-ajax.php' ), 'nxsnapWPnonce' => wp_create_nonce( 'nxsnapWPnonce' ),));
+if (!function_exists("nxssnap_enqueue_scripts")) { function nxssnap_enqueue_scripts(){ $screen = get_current_screen(); // prr($screen->id);   // prr($screen);      
+  if( $screen->id == 'settings_page_NextScripts_SNAP' || $screen->base == 'post') {
+      wp_enqueue_script( 'nxssnap-scripts', plugin_dir_url( __FILE__ ) . 'js/js.js', array( 'jquery' ),  NextScripts_SNAP_Version);
+      wp_enqueue_style( 'nxssnap-style',  plugin_dir_url( __FILE__ ) . 'js/snap.css', array(),  NextScripts_SNAP_Version );
+      
+      wp_enqueue_script( 'selectize', plugin_dir_url( __FILE__ ) . 'js/selectize.min.js', array( 'jquery' ),  NextScripts_SNAP_Version);
+      wp_enqueue_style( 'selectize',  plugin_dir_url( __FILE__ ) . 'js/selectize.css', array( ),  NextScripts_SNAP_Version );
+      
+      wp_enqueue_script( 'tokenize', plugin_dir_url( __FILE__ ) . 'js/jquery.tokenize.js', array( 'jquery' ),  NextScripts_SNAP_Version);
+      wp_enqueue_style( 'tokenize',  plugin_dir_url( __FILE__ ) . 'js/jquery.tokenize.css', array( ),  NextScripts_SNAP_Version );
+      
+      
+      wp_enqueue_script( 'jquery-ui-datepicker' );            
+      wp_enqueue_style( 'jquery-ui-datepicker',  plugin_dir_url( __FILE__ ) . 'js/jquery-ui.css', array( ),  NextScripts_SNAP_Version );
+      
+      wp_localize_script( 'nxssnap-scripts', 'MyAjax', array( 'ajaxurl' => nxs_get_admin_url( 'admin-ajax.php' ), 'nxsnapWPnonce' => wp_create_nonce( 'nxsnapWPnonce' ),));
+      
+  }  
 }} 
 
 function nxs_noR(&$item, &$key){ $item = is_string($item)?(str_replace("\r","\n",str_replace("\n\r","\n",str_replace("\r\n","\n",$item)))):$item; }
@@ -436,22 +453,6 @@ function nxs_doNewNPPost($options){ global $nxs_snapAvNts, $nxs_plurl; $postResu
     } echo "Done. Results:<br/> ".$postResults; }
 }
 
-if (!function_exists("nxs_snapAjax")) { function nxs_snapAjax() { check_ajax_referer('nxsSsPageWPN'); 
-  global $plgn_NS_SNAutoPoster; if (!isset($plgn_NS_SNAutoPoster)) return; $options = $plgn_NS_SNAutoPoster->nxs_options; 
-  if ($_POST['nxsact']=='getNTset'){$ii = $_POST['ii'];$nt = $_POST['nt'];$ntl = strtolower($nt); $pbo = $options[$ntl][$ii];  $pbo['ntInfo']['lcode'] = $ntl; $clName = 'nxs_snapClass'.$nt; $ntObj = new $clName();  
-     $ntObj->showNTSettings($ii, $pbo);  
-  }
-  if ($_POST['nxsact']=='svEdFlds') { 
-    $cn = str_replace(']','',$_POST['cname']); $cna = explode('[',$cn); prr($cna);  $id = $_POST['pid']; $nt = $cna[0]; $ntU = strtoupper($nt); $ii = $cna[1]; $fname = $cna[2];
-    $savedMeta = maybe_unserialize(get_post_meta($id, 'snap'.$ntU, true));  $savedMeta[$ii][$fname] = $_POST['cval'];  prr($savedMeta);
-    delete_post_meta($id, 'snap'.$ntU); add_post_meta($id, 'snap'.$ntU, str_replace('\\','\\\\',serialize($savedMeta)));   
-  }
-  if ($_POST['nxsact']=='getNewPostDlg') nxs_showNewPostForm($options);
-  if ($_POST['nxsact']=='doNewPost') nxs_doNewNPPost($options);
-  if ($_POST['nxsact']=='nxsCptCheckGP') nxs_CptCheckGP($options);
-  die();
-}}
-
 function nxs_admin_footer() {global $nxs_plurl; ?> <div style="display: none;" id="nxs_popupDiv"><span class="nxspButton bClose"><span>X</span></span> 
    <div id="nxsNPLoader" style="text-align: center; width: 100%; height: 80px; padding-top: 60px;";> <img  src="<?php echo $nxs_plurl; ?>img/ajax-loader-med.gif" /> </div> 
    <div id="nxs_popupDivCont" style="right: 10px; top:10px; font-size: 16px; font-weight: lighter;"> </div></div> <?php 
@@ -531,6 +532,7 @@ if (isset($plgn_NS_SNAutoPoster)) { //## Actions
     add_action('wp_ajax_nsDN', 'ns_delNT_ajax');    
   }
   
+ 
   if ($isO) {    
     add_action('admin_menu', 'NS_SNAutoPoster_ap');    
     add_action('admin_init', 'nxs_adminInitFunc2');        
@@ -543,6 +545,8 @@ if (isset($plgn_NS_SNAutoPoster)) { //## Actions
     add_action('publish_post', array($plgn_NS_SNAutoPoster, 'NS_SNAP_SavePostMetaTags'));
     add_action('save_post', array($plgn_NS_SNAutoPoster, 'NS_SNAP_SavePostMetaTags'));
   //  add_action('edit_page_form', array($plgn_NS_SNAutoPoster, 'NS_SNAP_SavePostMetaTags'));         
+  
+    
     
     add_action('wp_ajax_nsAuthFBSv', 'nsAuthFBSv_ajax');
     //## Custom Post Types and OG tags
@@ -564,4 +568,12 @@ if (isset($plgn_NS_SNAutoPoster)) { //## Actions
   }
  }
 }
+/*
+ function nxs_SNAP_PostOnUpdate($postID) {
+    delete_post_meta($postID, 'snap_isAutoPosted'); 
+    $post = get_post($postID); 
+    nxs_snapPublishTo($post);
+  }
+add_action('save_post', 'nxs_SNAP_PostOnUpdate');
+*/
 ?>

@@ -55,9 +55,10 @@ if (!class_exists("nxs_class_SNAP_FB")) { class nxs_class_SNAP_FB {
             $badOut['Warning'] = 'Unvalid URL: '.$message['url'].'| Will be posting as text message'; $fbPostType='T'; 
         } 
         if ($fbPostType=='A' || $fbPostType=='') {
-          if (($attachType=='A' || $attachType=='S')) { $attArr = array('name' => $message['urlTitle'], 'caption' => $message['siteName'], 'link' =>$message['url'], 'description' => $message['urlDescr']); 
-          $mssg = array_merge($mssg, $attArr); ; }
-          if ($attachType=='A') $mssg['actions'] = json_encode(array('name' => $message['siteName'], 'link' =>$message['url']));        
+          if (($attachType=='A' || $attachType=='S')) { $message['urlTitle'] = nsTrnc($message['urlTitle'], 250, " ", "...");
+            $attArr = array('name' => $message['urlTitle'], 'caption' => $message['siteName'], 'link' =>$message['url'], 'description' => $message['urlDescr']); $mssg = array_merge($mssg, $attArr); ; 
+          }
+          if ($attachType=='A') $mssg['actions'] = json_encode(array('name' => nsTrnc($message['siteName'], 250, " ", "..."), 'link' =>$message['url']));        
           if (trim($imgURL)!='') $mssg['picture'] = $imgURL;  //if (trim($message['videoURL'])!='') $mssg['source'] = $message['videoURL'];        
         } elseif ($fbPostType=='I') { /* $facebook->setFileUploadSupport(true); */ $fbWhere = 'photos'; $mssg['url'] = $imgURL; 
           if ($options['imgUpl']=='T') { //## Try to Post to TImeline

@@ -50,8 +50,8 @@ if (!class_exists("nxs_snapClassFB")) { class nxs_snapClassFB {
         }
       }
                                                
-      if (!empty($user['id'])) { $fbo['fbAppAuthUser'] = $user['id'];  $fbo['fbAppAuthUserName'] = $user['name'].(!empty($user['username'])?" (".$user['username'].")":'');  
-        if (function_exists('get_option')) $nxs_gOptions = get_option('NS_SNAutoPoster'); if(!empty($nxs_gOptions)) { $nxs_gOptions['fb'][$ii] = $fbo; nxs_settings_save($nxs_gOptions); }
+      if (!empty($user['id'])) { $fbo['fbAppAuthUser'] = $user['id'];  $fbo['fbAppAuthUserName'] = $user['name'].(!empty($user['username'])?" (".$user['username'].")":'');   nxs_save_glbNtwrks($ntInfo['lcode'],$ii,$fbo,'*'); 
+        //if (function_exists('get_option')) $nxs_gOptions = get_option('NS_SNAutoPoster'); if(!empty($nxs_gOptions)) { $nxs_gOptions['fb'][$ii] = $fbo; nxs_settings_save($nxs_gOptions); }
         ?><script type="text/javascript">window.location = "<?php echo $nxs_snapSetPgURL; ?>"</script>      
       <?php } die(); }
     }     

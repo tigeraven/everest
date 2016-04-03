@@ -8,7 +8,8 @@ if (!class_exists("nxs_snapClassBG")) { class nxs_snapClassBG { var $ntInfo = ar
     // V2 Auth
     if ( isset($_GET['code']) && $_GET['code']!='' && isset($_GET['state']) && substr($_GET['state'], 0, 7) == 'nxs-bg-'){  $at = $_GET['code'];  $ii = str_replace('nxs-bg-','',$_GET['state']);
       echo "----=={ oAuth 2.0 Wordflow }==----<br/>-= This is normal technical authorization info that will dissapear (Unless you get some errors) =- <br/><br/><br/>"; 
-      $gGet = $_GET; unset($gGet['code']); unset($gGet['state']); unset($gGet['post_type']); $sturl = explode('?',$nxs_snapSetPgURL); $nxs_snapSetPgURL = $sturl[0].((!empty($gGet))?'?'.http_build_query($gGet):''); 
+      $gGet = $_GET; unset($gGet['code']); unset($gGet['state']); unset($gGet['post_type']); unset($gGet['post']); 
+      $sturl = explode('?',$nxs_snapSetPgURL); $nxs_snapSetPgURL = $sturl[0].((!empty($gGet))?'?'.http_build_query($gGet):''); 
       
       $nto = $ntOpts[$ii]; $wprg = array();  $wprg['sslverify'] = false;
       if (isset($nto['APIKey'])){ echo "-="; prr($nto);// die();
@@ -28,8 +29,8 @@ if (!class_exists("nxs_snapClassBG")) { class nxs_snapClassBG { var $ntInfo = ar
         
         $response  = wp_remote_get($tknURL, $wprg); prr($tknURL); prr($response);  $user = json_decode($response['body'], true); prr($user);
        
-        if (!empty($user['url'])) { $nto['blogURL'] = $user['url']; $nto['bgBlogID'] = $user['id']; $nto['blogInfo'] = $user['name']." [".$user['id']."] (".$user['url'].")"; 
-          if (function_exists('get_option')) $nxs_gOptions = get_option('NS_SNAutoPoster'); if(!empty($nxs_gOptions)) { $nxs_gOptions['bg'][$ii] = $nto; prr($nto); nxs_settings_save($nxs_gOptions); }
+        if (!empty($user['url'])) { $nto['blogURL'] = $user['url']; $nto['bgBlogID'] = $user['id']; $nto['blogInfo'] = $user['name']." [".$user['id']."] (".$user['url'].")"; nxs_save_glbNtwrks($ntInfo['lcode'],$ii,$nto,'*');            
+          //if (function_exists('get_option')) $nxs_gOptions = get_option('NS_SNAutoPoster'); if(!empty($nxs_gOptions)) { $nxs_gOptions['bg'][$ii] = $nto; prr($nto); nxs_settings_save($nxs_gOptions); }
           ?><script type="text/javascript">window.location = "<?php echo $nxs_snapSetPgURL; ?>"</script>      
         <?php }        
       }
@@ -56,7 +57,7 @@ if (!class_exists("nxs_snapClassBG")) { class nxs_snapClassBG { var $ntInfo = ar
             <?php if (isset($pbo['rpstOn']) && (int)$pbo['rpstOn'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popReActive');" onmouseover="nxs_showPopUpInfo('popReActive', event);"><?php echo "*[R]*" ?></span><?php } ?>
             <strong><?php  _e('Auto-publish to', 'social-networks-auto-poster-facebook-twitter-g'); ?> <?php echo $ntInfo['name']; ?> <i style="color: #005800;"><?php if($pbo['nName']!='') echo "(".$pbo['nName'].")"; ?></i></strong>
           &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention requred. Unfinished setup', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?> <?php if (!class_exists('nxsAPI_GP') && !empty($pbo['bgUName']) && empty($pbo['APIKey'])){ ?><b style="color: #800000"><?php  _e('Attention requred. "ClientLogin" authentication method is no longer supported by Blogger', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?> <a id="do<?php echo $ntInfo['code'].$indx; ?>AG" href="#" onclick="doGetHideNTBlock('<?php echo $ntInfo['code'];?>' , '<?php echo $indx; ?>');return false;">[<?php  _e('Show Settings', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>&nbsp;&nbsp;
-          <a href="#" onclick="doDelAcct('<?php echo $ntInfo['lcode']; ?>', '<?php echo $indx; ?>', '<?php if (isset($pbo['bgBlogID'])) echo $pbo['nName']; ?>');return false;">[<?php  _e('Remove Account', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>
+          <a href="#" onclick="doDelAcct('<?php echo $ntInfo['lcode']; ?>', '<?php echo $indx; ?>', '<?php if (isset($pbo['bgBlogID'])) echo addslashes($pbo['nName']); ?>');return false;">[<?php  _e('Remove Account', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>
           </p><div id="nxsNTSetDiv<?php echo $ntInfo['code'].$indx; ?>"></div><?php //$pbo['ntInfo'] = $ntInfo; $this->showNTSettings($indx, $pbo);             
         }?>
       </div>

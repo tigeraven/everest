@@ -53,7 +53,7 @@ function attitude_textarea_register($wp_customize){
 				<option value="0" <?php if ( empty( $options['front_page_category'] ) ) { selected( true, true ); } ?>><?php _e( '--Disabled--', 'attitude' ); ?></option>
 				<?php
 					foreach ( $categories as $category) :?>
-						<option value="<?php echo $category->cat_ID; ?>" <?php if ( in_array( $category->cat_ID, $categories) ) { selected();}?>><?php echo $category->cat_name; ?></option>
+						<option value="<?php echo $category->cat_ID; ?>" <?php if ( in_array( $category->cat_ID, $options['front_page_category']) ) { echo 'selected="selected"';}?>><?php echo $category->cat_name; ?></option>
 					<?php endforeach; ?>
 				</select>
 			</label>

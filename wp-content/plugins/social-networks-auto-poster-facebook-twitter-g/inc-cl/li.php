@@ -133,7 +133,7 @@ if (!class_exists("nxs_snapClassLI")) { class nxs_snapClassLI { var $ntInfo = ar
             <?php if (isset($pbo['catSel']) && (int)$pbo['catSel'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popOnlyCat');" onmouseover="nxs_showPopUpInfo('popOnlyCat', event);"><?php echo "*[".(substr_count($pbo['catSelEd'], ",")+1)."]*" ?></span><?php } ?>
             <?php if (isset($pbo['rpstOn']) && (int)$pbo['rpstOn'] == 1) { ?> <span onmouseout="nxs_hidePopUpInfo('popReActive');" onmouseover="nxs_showPopUpInfo('popReActive', event);"><?php echo "*[R]*" ?></span><?php } ?>
             <strong><?php  _e('Auto-publish to', 'social-networks-auto-poster-facebook-twitter-g'); ?> <?php echo $ntInfo['name']; ?> <i style="color: #005800;"><?php if($pbo['nName']!='') echo "(".$pbo['nName'].")"; ?></i></strong>
-          &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention requred. Unfinished setup', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?> <?php if (!empty($pbo['grpID'])){ ?><b style="color: #800000"><?php  _e('Attention requred. Groups are no longer supported by LinkedIn Native API', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?> <a id="do<?php echo $ntInfo['code'].$indx; ?>AG" href="#" onclick="doGetHideNTBlock('<?php echo $ntInfo['code'];?>' , '<?php echo $indx; ?>');return false;">[<?php  _e('Show Settings', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>&nbsp;&nbsp;
+          &nbsp;&nbsp;<?php if ($ntInfo['tstReq'] && (!isset($pbo[$ntInfo['lcode'].'OK']) || $pbo[$ntInfo['lcode'].'OK']=='')){ ?><b style="color: #800000"><?php  _e('Attention required. Unfinished setup', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?> <?php if (!empty($pbo['grpID'])){ ?><b style="color: #800000"><?php  _e('Attention required. Groups are no longer supported by LinkedIn Native API', 'social-networks-auto-poster-facebook-twitter-g'); ?> ==&gt;</b><?php } ?> <a id="do<?php echo $ntInfo['code'].$indx; ?>AG" href="#" onclick="doGetHideNTBlock('<?php echo $ntInfo['code'];?>' , '<?php echo $indx; ?>');return false;">[<?php  _e('Show Settings', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>&nbsp;&nbsp;
           <a href="#" onclick="doDelAcct('<?php echo $ntInfo['lcode']; ?>', '<?php echo $indx; ?>', '<?php if (isset($pbo['bgBlogID'])) echo $pbo['nName']; ?>');return false;">[<?php  _e('Remove Account', 'social-networks-auto-poster-facebook-twitter-g'); ?>]</a>
           </p><div id="nxsNTSetDiv<?php echo $ntInfo['code'].$indx; ?>"></div><?php //$pbo['ntInfo'] = $ntInfo; $this->showNTSettings($indx, $pbo);             
         }?>
@@ -248,7 +248,7 @@ if (!class_exists("nxs_snapClassLI")) { class nxs_snapClassLI { var $ntInfo = ar
             <div id="altFormat" style="display: <?php echo (!empty($options['apiToUse']) && $options['apiToUse'] =='nx')?"block":"none"; ?>;">
               <div style="width:100%;"><strong id="altFormatText"><?php _e('Message title Format (Groups Only)', 'social-networks-auto-poster-facebook-twitter-g'); ?>:</strong> </div>
               
-              <input name="li[<?php echo $ii; ?>][apLIMsgFrmtT]" id="li<?php echo $ii; ?>SNAPformatT" style="width: 50%;" value="<?php if ($isNew) echo "New Post - %TITLE%"; else _e(apply_filters('format_to_edit',htmlentities($options['liMsgFormatT'], ENT_COMPAT, "UTF-8")), 'social-networks-auto-poster-facebook-twitter-g'); ?>" onfocus="mxs_showFrmtInfo('apLIMsgFrmtT<?php echo $ii; ?>');" /><?php nxs_doShowHint("apIPMsgFrmt".$ii); ?>
+              <input name="li[<?php echo $ii; ?>][liMsgFormatT]" id="li<?php echo $ii; ?>SNAPformatT" style="width: 50%;" value="<?php if ($isNew) echo "New Post - %TITLE%"; else _e(apply_filters('format_to_edit',htmlentities($options['liMsgFormatT'], ENT_COMPAT, "UTF-8")), 'social-networks-auto-poster-facebook-twitter-g'); ?>" onfocus="mxs_showFrmtInfo('apLIMsgFrmtT<?php echo $ii; ?>');" /><?php nxs_doShowHint("apIPMsgFrmt".$ii); ?>
                          
             </div>              
                         
@@ -307,7 +307,7 @@ if (!class_exists("nxs_snapClassLI")) { class nxs_snapClassLI { var $ntInfo = ar
         if (isset($pval['grpID']))     $options[$ii]['grpID'] = trim($pval['grpID']);                
         if (isset($pval['uPage']))     $options[$ii]['uPage'] = trim($pval['uPage']);                
         if (isset($pval['apLIMsgFrmt'])) $options[$ii]['liMsgFormat'] = trim($pval['apLIMsgFrmt']); 
-        if (isset($pval['apLIMsgFrmtT'])) $options[$ii]['liMsgFormatT'] = trim($pval['apLIMsgFrmtT']); 
+        if (isset($pval['liMsgFormatT'])) $options[$ii]['liMsgFormatT'] = trim($pval['liMsgFormatT']); 
         if (isset($pval['apLIMsgAFrmt']))    $options[$ii]['liMsgAFrmt'] = trim($pval['apLIMsgAFrmt']); 
         
         $options[$ii] = nxs_adjRpst($options[$ii], $pval);       
@@ -368,7 +368,7 @@ if (!class_exists("nxs_snapClassLI")) { class nxs_snapClassLI { var $ntInfo = ar
                 <?php nxs_doShowHint("apLIMsgFrmt".$ii); ?></td></tr>
                 
                 <tr id="altFormat1" style=""><th scope="row" style="vertical-align:top; padding-top: 6px; text-align:right; width:60px; padding-right:10px;"><?php _e('Title Format (Groups Only):', 'social-networks-auto-poster-facebook-twitter-g') ?></th>
-                <td><input value="<?php echo $liMsgFormatT ?>" type="text" name="li[<?php echo $ii; ?>][SNAPformatT]"  style="width:60%;max-width: 610px;" onfocus="jQuery('.nxs_FRMTHint').hide();mxs_showFrmtInfo('apLIMsgFrmtT<?php echo $ii; ?>');"/><?php nxs_doShowHint("apLIMsgFrmtT".$ii, '', '58'); ?></td></tr>                
+                <td><input value="<?php echo $liMsgFormatT ?>" type="text" name="li[<?php echo $ii; ?>][liMsgFormatT]"  style="width:60%;max-width: 610px;" onfocus="jQuery('.nxs_FRMTHint').hide();mxs_showFrmtInfo('apLIMsgFrmtT<?php echo $ii; ?>');"/><?php nxs_doShowHint("apLIMsgFrmtT".$ii, '', '58'); ?></td></tr>                
                 <?php /* ## Select Image & URL ## */ nxs_showImgToUseDlg($nt, $ii, $imgToUse); nxs_showURLToUseDlg($nt, $ii, $urlToUse); ?>
 
                 <?php } 
@@ -377,7 +377,7 @@ if (!class_exists("nxs_snapClassLI")) { class nxs_snapClassLI { var $ntInfo = ar
   
   function adjMetaOpt($optMt, $pMeta){ if (isset($pMeta['isPosted'])) $optMt['isPosted'] = $pMeta['isPosted']; else  $optMt['isPosted'] = '';
      if (isset($pMeta['SNAPformat'])) $optMt['liMsgFormat'] = $pMeta['SNAPformat']; if (trim($optMt['liMsgFormat'])=='') $optMt['liMsgFormat'] = ' ';     
-     if (isset($pMeta['SNAPformatT'])) $optMt['liMsgFormatT'] = $pMeta['SNAPformatT']; if (trim($optMt['liMsgFormatT'])=='') $optMt['liMsgFormatT'] = ' ';
+     if (isset($pMeta['liMsgFormatT'])) $optMt['liMsgFormatT'] = $pMeta['liMsgFormatT']; if (trim($optMt['liMsgFormatT'])=='') $optMt['liMsgFormatT'] = ' ';
      if (isset($pMeta['imgToUse'])) $optMt['imgToUse'] = $pMeta['imgToUse']; if (isset($pMeta['urlToUse'])) $optMt['urlToUse'] = $pMeta['urlToUse']; 
      if (isset($pMeta['postType'])) $optMt['postType'] = $pMeta['postType'];
      if (isset($pMeta['timeToRun']))  $optMt['timeToRun'] = $pMeta['timeToRun'];  if (isset($pMeta['rpstPostIncl']))  $optMt['rpstPostIncl'] = $pMeta['rpstPostIncl'];         
